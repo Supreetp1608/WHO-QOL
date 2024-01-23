@@ -1,1 +1,1 @@
-# WHOQOL
+# WHO-QOL
