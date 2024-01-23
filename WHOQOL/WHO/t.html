@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz App</title>
+</head>
+<body>
+
+<button id="startButton">Start Quiz</button>
+
+<div id="quizContainer" style="display: none;">
+  <div id="questionContainer"></div>
+  <button onclick="handlePrev()">Previous Question</button>
+  <button onclick="handleNext()">Next Question</button>
+  <button onclick="handleSubmit()">Submit</button>
+  <div id="result" style="display: none;"></div>
+</div>
+
+<script>
+  const Data = [
+    {
+      question: "Question 1",
+      options: [
+        { answer: "Option 1", score: 1 },
+        { answer: "Option 2", score: 2 },
+        { answer: "Option 3", score: 3 },
+      ],
+      marks: 0,
+    },
+    {
+        question: "Question 2",
+        options: [
+          { answer: "Option 1", score: 1 },
+          { answer: "Option 2", score: 2 },
+          { answer: "Option 3", score: 3 },
+        ],
+        marks: 0,
+      },
+      {
+        question: "Question 3",
+        options: [
+          { answer: "Option 1", score: 1 },
+          { answer: "Option 2", score: 2 },
+          { answer: "Option 3", score: 3 },
+        ],
+        marks: 0,
+      },
+      {
+        question: "Question 4",
+        options: [
+          { answer: "Option 1", score: 1 },
+          { answer: "Option 2", score: 2 },
+          { answer: "Option 3", score: 3 },
+        ],
+        marks: 0,
+      },
+    // Add more questions as needed
+  ];
+
+  let questionIndex = 0;
+  let checked = undefined;
+  let score = 0;
+  const questions = [...Data];
+
+  function startQuiz() {
+    document.getElementById("startButton").style.display = "none";
+    document.getElementById("quizContainer").style.display = "block";
+    displayQuestion();
+  }
+
+  function displayQuestion() {
+    const questionContainer = document.getElementById("questionContainer");
+    const question = questions[questionIndex];
+
+    let optionsHTML = "";
+
+    question.options.forEach((option, index) => {
+      optionsHTML += `
+        <label>
+          <input type="radio" name="option" value="${index}" onclick="onSelect(${index})" ${checked === index ? "checked" : ""}>
+          ${option.answer}
+        </label>
+      `;
+    });
+
+    questionContainer.innerHTML = `
+      <h2>${question.question}</h2>
+      <div class="options">${optionsHTML}</div>
+    `;
+  }
+
+  function handleSubmit() {
+    let totalScore = 0;
+    for (let i = 0; i < questions.length; i++) {
+      totalScore += questions[i].marks;
+    }
+    score = totalScore;
+    console.log("Total Score:", totalScore);
+    document.getElementById("result").innerHTML = `Your total score is: ${score}`;
+    document.getElementById("result").style.display = "block";
+  }
+
+  function onSelect(i) {
+    checked = i;
+    questions[questionIndex].marks = questions[questionIndex].options[i].score;
+    console.log(questions[questionIndex].marks);
+  }
+
+  function handleNext() {
+    if (checked !== undefined) {
+      checked = undefined;
+      if (questionIndex < Data.length - 1) {
+        questionIndex++;
+        displayQuestion();
+      } else {
+        handleSubmit();
+      }
+    } else {
+      alert("Please select an option before moving to the next question.");
+    }
+  }
+
+  function handlePrev() {
+    checked = undefined;
+    questionIndex = Math.max(questionIndex - 1, 0);
+    displayQuestion();
+  }
+
+  document.getElementById("startButton").addEventListener("click", startQuiz);
+</script>
+
+</body>
+</html>
